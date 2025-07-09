@@ -225,6 +225,7 @@ async function Plugins(node, msg, configs, options) {
 
 
 async function Login(node, Configs) {
+    console.log(JSON.stringify(Configs));
     let url = `${buildBaseUrl(Configs)}/Login`
     const data = { 
         "databaseName": Configs.databaseName,

@@ -5,6 +5,10 @@
       defaults: {
         layerone: { value: "", type: 'you-layerone2'},
         name: {value: ''},
+        entity: {value: ''},
+        entitydynamics: {value : ''},
+        configsid: {value : ''},
+        paramsprops: {value : ''}
       },
       inputs:1,
       outputs:1,
@@ -13,14 +17,131 @@
       label: function() {
         return this.name||"LayerOne2 authenticate";
       },
+      oneditprepare: function () {
+        $("#node-input-configsid").typedInput({
+        type:"msg",
+        types:["msg"],
+        typeField: "#node-input-configsid-type",
+        value: 'configsid'
+      });
+        $("#node-input-paramsprops").typedInput({
+        type:"msg",
+        types:["msg"],
+        typeField: "#node-input-paramsprops-type",
+        value: 'paramsprops'
+      });
+      
+        jQuery("#node-input-entity").change(function() {
+          jQuery('#node-entitydynamics').hide();
+          jQuery('#node-configsid').hide();
+          jQuery('#node-params').hide();
+          
+          if (jQuery(this).val() === 'Static'){ 
+              jQuery('#node-staticlogin').show();
+              jQuery('#node-entitydynamics').hide();
+               jQuery('#node-configsid').hide();
+                jQuery('#node-params').hide();
+          }
+          else if(jQuery(this).val() === 'Dynamics'){
+              jQuery('#node-staticlogin').hide();
+              jQuery('#node-entitydynamics').show();
+               jQuery('#node-configsid').show();
+                
+          }
+        });
+
+
+
+        jQuery("#node-input-entitydynamics").change(function() {
+          jQuery('#node-configsid').hide();
+          jQuery('#node-params').hide();
+          if (jQuery(this).val() === 'Configs'){ 
+              jQuery('#node-configsid').show();
+              jQuery('#node-params').hide();
+          }
+          else if(jQuery(this).val() === 'Params'){
+              jQuery('#node-configsid').hide();
+              jQuery('#node-params').show();
+          }
+        });
+
+      }
     });
   </script>
     
   <script type="text/html" data-template-name="you-layerone2-auth">
     <div class="form-row">
+       <label for="node-input-type"><i class="fa fa-cube"></i> Login Type</label>
+        <select name="node-input-entity" id="node-input-entity">
+          <option value="Static">Static configured</option>
+          <option value="Dynamics">Dynamics configured</option>
+        </select>
+      </div>
+      <!-- Dynamic Login -->
+
+      <div class="form-row" id="node-entitydynamics" style="display:none">
+       <label for="node-input-type-entitydynamics"><i class="fa fa-cube"></i> Dynamics Type</label>
+        <select name="node-input-entitydynamics" id="node-input-entitydynamics">
+          <option value="Configs">Dynamics Configuration</option>
+          <option value="Params">Dynamics Params</option>
+        </select>
+      </div>
+
+      <div id="node-configsid">
+          <div class="form-row" >
+            <label for="node-input-configsid"><i class="fa fa-gears"></i> Props Configs ID</label>
+            <input type="text" id="node-input-configsid">
+            <input type="hidden" id="node-input-configsid-type">
+          </div>
+          <div>
+          <p>
+            Exsample props Configs
+          </p>
+          <pre>
+            <code>
+              msg.params = {
+                config: "482172cc252e1e69"
+              }
+            </code>
+          </pre>
+        </div>
+      </div>
+       
+
+        <div id="node-params">
+        <div class="form-row" id="node-paramsprops">
+          <label for="node-input-paramsprops"><i class="fa fa-gears"></i> Props Params</label>
+          <input type="text" id="node-input-paramsprops">
+          <input type="hidden" id="node-input-paramsprops-type">
+        </div>
+
+        <div>
+          <p>
+            Exsample props Params
+          </p>
+          <pre>
+            <code>
+              msg.params = {
+                "host": "localhost",
+                "port": "5051",
+                version: "v1",
+                databaseName: "SBODemo-IT",
+                companyUser: "manager",
+                companyPassword: "sapb1",
+                consumerIdentity:"NTH"
+              }
+            </code>
+          </pre>
+        </div>
+        </div>
+
+      <!-- END Dynamics Login --> 
+      <!-- STATIC LOGIN -->
+    <div class="form-row" id="node-staticlogin">
         <label for="node-input-layerone"><i class="fa fa-lock"></i> Configs</label>
         <input type="text" id="node-input-layerone">
     </div>
+    <!-- END STATIC LOGING-->
     <div class="form-row">
       <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name">
