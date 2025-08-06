@@ -15,7 +15,7 @@ module.exports = function (RED)  {
         }
 
         const globalContext = this.context().global;
-        let globalName = `${PREFIXNAME}_CONFIG.${n.host.replaceAll('.', '')}.${n.host}.${n.databaseName}_${n.companyUser}`;
+        let globalName = `${PREFIXNAME}_CONFIG.${n.host.replaceAll('.', '')}_${n.databaseName}_${n.companyUser}`;
         globalContext.set(globalName, {
                 id: n.id,
                 host: n.host || "",
