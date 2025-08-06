@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+# [0.0.12] - 2025-08-06
+- add Manage UserFieldsMD on you-layerone2-sl-create / you-layerone2-sl-list / you-layerone2-sl-delete 
+> Not add Manage on you-layerone2-sl-get becose not work on corrent ServiceLayer Version
+
 # [0.0.11] - 2025-07-09
 - General Bug Fix on you-layerone2-sl-manipolate-entity and you-layerone2-sl-close 
 
