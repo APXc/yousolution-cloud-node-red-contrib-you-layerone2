@@ -40,7 +40,8 @@ module.exports = function(RED) {
                         lyc: node.id,
                         layeroneConfigs: node.layeroneConfigs,
                         type: config.entity,
-                        dynamics: config.entitydynamics
+                        dynamics: config.entitydynamics,
+                        id: globalName,
                     }
 
                     let conf = RED.nodes.getNode(node.layeroneConfigs).options;
@@ -208,7 +209,7 @@ module.exports = function(RED) {
                             lyc: node.id,
                             layeroneConfigs: config.configsid,///node.layeroneConfigs
                             type: node.entity,
-                            
+
                         }
 
                         //let conf = RED.nodes.getNode(config.configsid).options;

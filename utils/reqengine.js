@@ -252,13 +252,28 @@ async function Login(node, Configs) {
 function getSapParams(node, msg) {
   try {
     let globalContext = node.context().global;
-    let idAuthNode = msg[PREFIXNAME].lyc;
-    let globalName = `${PREFIXNAME}_${idAuthNode}`;
-    let currentelayeroneConfigs = globalContext.get(globalName);
 
-    //node.log(JSON.stringify(currentelayeroneConfigs.headers, null, 4));
-   // let headers = currentelayeroneConfigs.headers;
-    return { idLayerOneConfigs: currentelayeroneConfigs.layeroneConfigs, currentelayeroneConfigs: currentelayeroneConfigs.configs, headers: currentelayeroneConfigs.headers };
+    if(msg[PREFIXNAME].type == '' || msg[PREFIXNAME].type == 'Static') {
+      let idAuthNode = msg[PREFIXNAME].lyc;
+      let globalName = `${PREFIXNAME}_${idAuthNode}`;
+      let currentelayeroneConfigs = globalContext.get(globalName);
+      return { idLayerOneConfigs: currentelayeroneConfigs.layeroneConfigs, currentelayeroneConfigs: currentelayeroneConfigs.configs, headers: currentelayeroneConfigs.headers };    
+    }
+    else {
+      if(msg[PREFIXNAME].dynamics = 'Configs') {
+        let globalName = msg[PREFIXNAME].id;
+        let currentelayeroneConfigs = globalContext.get(globalName);
+        return { 
+          idLayerOneConfigs: currentelayeroneConfigs.id, 
+          currentelayeroneConfigs: currentelayeroneConfigs.configs, 
+          headers: currentelayeroneConfigs.headers 
+        };    
+
+      }
+
+    }
+
+   
   } catch (error) {
     node.error('You Not Authenticate', msg);
 

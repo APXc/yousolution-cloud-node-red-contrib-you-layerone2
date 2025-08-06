@@ -18,6 +18,12 @@ module.exports = function (RED)  {
         let globalName = `${PREFIXNAME}_CONFIG.${n.host.replaceAll('.', '')}_${n.databaseName}_${n.companyUser}`;
         globalContext.set(globalName, {
                 id: n.id,
+                configs: {
+                    options:  {
+                        ...this.options,
+                        companyPassword: undefined
+                    }
+                },
                 host: n.host || "",
                 databaseName: n.databaseName,
                 companyUser: n.companyUser
