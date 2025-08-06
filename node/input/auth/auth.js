@@ -1,6 +1,7 @@
 
 
 const { PREFIXNAME, login} = require('../../../utils/reqengine');
+const { v4 } = require('uuid');
 
 module.exports = function(RED) {
     function LayerOne2Auth(config) {
@@ -26,7 +27,6 @@ module.exports = function(RED) {
     
         node.on('input', async function(msg)
         {
-            console.log(config);
             try {
                 
                 if(config.entity == "Static" || config.entity == "") {
@@ -171,31 +171,23 @@ module.exports = function(RED) {
                             return;
                         }
 
+                        globalName = `${PREFIXNAME}_PARAMS.${params.host.replaceAll('.', '')}_${params.databaseName}_${params.companyUser}`;
 
-                        let currentDynamics = {};
-                        let dynamicsConfigs = globalContext.get(`${globalName}.params`);
-                        let exitCurrent = dynamicsConfigs.some((conf) => conf.id == `${params.host}:${params.port}/${params.databaseName}`);
+                        let dynamicsConfigs = globalContext.get(globalName);
 
-                        if(!exitCurrent) {
-                            currentDynamics = {
-                                id: `${params.host}:${params.port}/${params.databaseName}`,
-                                ...params
-                            }
-                            dynamicsConfigs.push(currentDynamics);
-                            globalContext.set(`${globalName}.params`, dynamicsConfigs);
-                            dynamicsConfigs = globalContext.get(`${globalName}.params`);
-
+                        if(!dynamicsConfigs) {
+                            dynamicsConfigs = {
+                                    id: v4(),
+                                    configs: {
+                                        ...params,
+                                        companyPassword: undefined
+                                    },
+                                    host: params.host || "",
+                                    databaseName: params.databaseName,
+                                    companyUser: params.companyUser
+                            };
+                            globalContext.set(globalName, dynamicsConfigs);
                         }
-                        else {
-                            currentDynamics =  dynamicsConfigs.find((conf) => conf.id == `${params.host}:${params.port}/${params.databaseName}`);
-                        }
-
-
-                        let currentDate = new Date();
-                        const headers = currentDynamics.headers;///globalContext.get(`${globalName}.headers`);
-                        const exipiredTime = currentDynamics.exp;// globalContext.get(`${globalName}.exp`);
-                        let validToken = true;
-
                 //     msg.params = {
                 //     "host": "localhost",
                 //     "port": "5051",
@@ -207,14 +199,26 @@ module.exports = function(RED) {
                 //   }
                         msg[PREFIXNAME] = {
                             lyc: node.id,
-                            layeroneConfigs: config.configsid,///node.layeroneConfigs
-                            type: node.entity,
+                            layeroneConfigs: "ND",
+                            type: config.entity,
+                            dynamics: config.entitydynamics,
+                            id: globalName,
+                        }
+                        let currentDate = new Date();
+                        let headers = globalContext.get(`${globalName}.headers`);
+                        const dataset = globalContext.get(`${globalName}.dataset`);
+                        let exipiredTime = globalContext.get(`${globalName}.exp`);
+                        let validToken = true;
 
+                        if(dataset) {
+                            if(dataset.DatabaseName != params.databaseName || dataset.CompanyUser != params.companyUser){
+                                headers = undefined;
+                                validToken = undefined;
+                            }
                         }
 
-                        //let conf = RED.nodes.getNode(config.configsid).options;
-                        // globalContext.set(`${globalName}.layeroneConfigs`, config.configsid); 
-                        // globalContext.set(`${globalName}.configs`, conf);
+                        globalContext.set(`${globalName}.layeroneConfigs`, params); 
+                        globalContext.set(`${globalName}.configs`, params);
 
                         if(headers && exipiredTime) {
                             let providedDate = new Date(exipiredTime);
@@ -225,20 +229,15 @@ module.exports = function(RED) {
 
                         if(!headers || !validToken) {
                             try {
-                                
-
                                 const result = await login(node , params);
                                 if(result.data.hasOwnProperty("error")) {
                                     node.error( result.data.error , msg);
                                     node.status({ fill: 'red', shape: 'dot', text: 'disconnected' });
                                 }
                                 else {
-                                    let index = dynamicsConfigs.findIndex((conf) => conf.id == `${params.host}:${params.port}/${params.databaseName}`);
-
-                                    dynamicsConfigs[index].headers = { Authorization: `Bearer ${result.data.AuthenticationToken}`};
-                                    dynamicsConfigs[index].dataset = result.data;
-                                    dynamicsConfigs[index].exp = currentDate.toISOString();
-                                    globalContext.set(`${globalName}.params`, dynamicsConfigs);
+                                    globalContext.set(`${globalName}.headers`, { Authorization: `Bearer ${result.data.AuthenticationToken}`});
+                                    globalContext.set(`${globalName}.dataset`, result.data);
+                                    globalContext.set(`${globalName}.exp`, currentDate.toISOString());
                                     node.send(msg);
                                     node.status({ fill: 'green', shape: 'dot', text: 'connected' });
                                 }
@@ -256,7 +255,8 @@ module.exports = function(RED) {
                         else {
                             node.status({ fill: 'green', shape: 'dot', text: 'connected' });
                             node.send(msg);
-                        }   
+                        }  
+                         
                     }
                     else {
                         node.status({ fill: 'gray', shape: 'ring', text: 'Missing Dynamics Login' });

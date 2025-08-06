@@ -225,7 +225,6 @@ async function Plugins(node, msg, configs, options) {
 
 
 async function Login(node, Configs) {
-    console.log(JSON.stringify(Configs));
     let url = `${buildBaseUrl(Configs)}/Login`
     const data = { 
         "databaseName": Configs.databaseName,
@@ -260,7 +259,7 @@ function getSapParams(node, msg) {
       return { idLayerOneConfigs: currentelayeroneConfigs.layeroneConfigs, currentelayeroneConfigs: currentelayeroneConfigs.configs, headers: currentelayeroneConfigs.headers };    
     }
     else {
-      if(msg[PREFIXNAME].dynamics = 'Configs') {
+      //if(msg[PREFIXNAME].dynamics = 'Configs') {
         let globalName = msg[PREFIXNAME].id;
         let currentelayeroneConfigs = globalContext.get(globalName);
         return { 
@@ -269,7 +268,13 @@ function getSapParams(node, msg) {
           headers: currentelayeroneConfigs.headers 
         };    
 
-      }
+      //}
+     // else if(msg[PREFIXNAME].dynamics == 'Params') {
+
+    //  }
+    //  else {
+  //      node.error('You Not Set type of', msg);
+//}
 
     }
 
