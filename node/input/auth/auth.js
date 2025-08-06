@@ -35,7 +35,6 @@ module.exports = function(RED) {
                     const exipiredTime = globalContext.get(`${globalName}.exp`);
                     let validToken = true;
 
-
                     msg[PREFIXNAME] = {
                         lyc: node.id,
                         layeroneConfigs: node.layeroneConfigs,
@@ -97,7 +96,6 @@ module.exports = function(RED) {
                         let currentDate = new Date();
                         node.layeroneConfigs = msg[config.configsid].config;
                         let conf = RED.nodes.getNode(msg[config.configsid].config).options;
-
 
                         globalName = `${PREFIXNAME}_CONFIG.${conf.host.replaceAll('.', '')}_${conf.databaseName}_${conf.companyUser}`;
 
@@ -188,15 +186,7 @@ module.exports = function(RED) {
                             };
                             globalContext.set(globalName, dynamicsConfigs);
                         }
-                //     msg.params = {
-                //     "host": "localhost",
-                //     "port": "5051",
-                //     version: "v1",
-                //     databaseName: "SBODemo-IT",
-                //     companyUser: "manager",
-                //     companyPassword: "sapb1",
-                //     consumerIdentity:"NTH"
-                //   }
+
                         msg[PREFIXNAME] = {
                             lyc: node.id,
                             layeroneConfigs: "ND",

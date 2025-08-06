@@ -259,7 +259,6 @@ function getSapParams(node, msg) {
       return { idLayerOneConfigs: currentelayeroneConfigs.layeroneConfigs, currentelayeroneConfigs: currentelayeroneConfigs.configs, headers: currentelayeroneConfigs.headers };    
     }
     else {
-      //if(msg[PREFIXNAME].dynamics = 'Configs') {
         let globalName = msg[PREFIXNAME].id;
         let currentelayeroneConfigs = globalContext.get(globalName);
         return { 
@@ -267,18 +266,8 @@ function getSapParams(node, msg) {
           currentelayeroneConfigs: currentelayeroneConfigs.configs, 
           headers: currentelayeroneConfigs.headers 
         };    
-
-      //}
-     // else if(msg[PREFIXNAME].dynamics == 'Params') {
-
-    //  }
-    //  else {
-  //      node.error('You Not Set type of', msg);
-//}
-
     }
 
-   
   } catch (error) {
     node.error('You Not Authenticate', msg);
 
