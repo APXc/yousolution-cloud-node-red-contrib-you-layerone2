@@ -8,7 +8,8 @@
         entity: {value: ''},
         entitydynamics: {value : ''},
         configsid: {value : '', validate: (v) => true},
-        paramsprops: {value : '', validate: (v) => true }
+        paramsprops: {value : '', validate: (v) => true },
+        headers: {value: '', validate: (v) => true},
       },
       inputs:1,
       outputs:1,
@@ -18,6 +19,12 @@
         return this.name||"LayerOne2 authenticate";
       },
       oneditprepare: function () {
+        $("#node-input-headers").typedInput({
+        type:"msg",
+        types:["msg"],
+        typeField: "#node-input-headers-type",
+        value: 'headers'
+        });
         $("#node-input-configsid").typedInput({
         type:"msg",
         types:["msg"],
@@ -141,6 +148,13 @@
         <input type="text" id="node-input-layerone">
     </div>
     <!-- END STATIC LOGING-->
+
+    <div class="form-row">
+      <label for="node-input-type"><i class="fa fa-gears"></i> Headers</label>
+      <input type="text" id="node-input-headers">
+      <input type="hidden" id="node-input-headers-type">
+    </div>
+
     <div class="form-row">
       <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name">

@@ -57,7 +57,7 @@ module.exports = function(RED) {
 
                     if(!headers || !validToken) {
                         try {
-                            const result = await login(node , conf);
+                            const result = await login(node , conf, msg[config.headers] || {});
                             if(result.data.hasOwnProperty("error")) {
                                 node.error( result.data.error , msg);
                                 node.status({ fill: 'red', shape: 'dot', text: 'disconnected' });
@@ -131,7 +131,7 @@ module.exports = function(RED) {
 
                         if(!headers || !validToken) {
                             try {
-                                const result = await login(node , conf);
+                                const result = await login(node , conf,  msg[config.headers] || {});
                                 if(result.data.hasOwnProperty("error")) {
                                     node.error( result.data.error , msg);
                                     node.status({ fill: 'red', shape: 'dot', text: 'disconnected' });
@@ -219,7 +219,7 @@ module.exports = function(RED) {
 
                         if(!headers || !validToken) {
                             try {
-                                const result = await login(node , params);
+                                const result = await login(node , params,  msg[config.headers] || {});
                                 if(result.data.hasOwnProperty("error")) {
                                     node.error( result.data.error , msg);
                                     node.status({ fill: 'red', shape: 'dot', text: 'disconnected' });

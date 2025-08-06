@@ -224,7 +224,7 @@ async function Plugins(node, msg, configs, options) {
 }
 
 
-async function Login(node, Configs) {
+async function Login(node, Configs, headers = {}) {
     let url = `${buildBaseUrl(Configs)}/Login`
     const data = { 
         "databaseName": Configs.databaseName,
@@ -240,8 +240,11 @@ async function Login(node, Configs) {
         data: data,
         headers: {
           'Content-Type': 'application/json',
+          ...headers
         },
     };
+
+    console.log(options);
 
     return await axios(options);
 
