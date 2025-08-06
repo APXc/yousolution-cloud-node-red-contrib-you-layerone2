@@ -1,3 +1,4 @@
+const { PREFIXNAME } = require('../../utils/reqengine');
 module.exports = function (RED)  {
     function LayerOne2ConfigsNode(n) {
         RED.nodes.createNode(this, n);
@@ -12,6 +13,15 @@ module.exports = function (RED)  {
             companyPassword: n.companyPassword,
             consumerIdentity: n.consumerIdentity,
         }
+
+        const globalContext = this.context().global;
+        let globalName = `${PREFIXNAME}_CONFIG.${n.host.replaceAll('.', '')}.${n.host}.${n.databaseName}_${n.companyUser}`;
+        globalContext.set(globalName, {
+                id: n.id,
+                host: n.host || "",
+                databaseName: n.databaseName,
+                companyUser: n.companyUser
+        });
     }
 
     RED.nodes.registerType('you-layerone2', LayerOne2ConfigsNode);
