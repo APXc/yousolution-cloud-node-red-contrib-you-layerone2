@@ -265,22 +265,13 @@ async function Login(node, Configs, headers = {}) {
 function getSapParams(node, msg) {
   try {
     let globalContext = node.context().global;
-
-    if(msg[PREFIXNAME].type == '' || msg[PREFIXNAME].type == 'Static') {
-      let idAuthNode = msg[PREFIXNAME].lyc;
-      let globalName = `${PREFIXNAME}_${idAuthNode}`;
-      let currentelayeroneConfigs = globalContext.get(globalName);
-      return { idLayerOneConfigs: currentelayeroneConfigs.layeroneConfigs, currentelayeroneConfigs: currentelayeroneConfigs.configs, headers: currentelayeroneConfigs.headers };    
-    }
-    else {
-        let globalName = msg[PREFIXNAME].id;
-        let currentelayeroneConfigs = globalContext.get(globalName);
-        return { 
-          idLayerOneConfigs: currentelayeroneConfigs.id, 
-          currentelayeroneConfigs: currentelayeroneConfigs.configs, 
-          headers: currentelayeroneConfigs.headers 
-        };    
-    }
+    let globalName = msg[PREFIXNAME].id;
+    let currentelayeroneConfigs = globalContext.get(globalName);
+    return { 
+      idLayerOneConfigs: currentelayeroneConfigs.id, 
+      currentelayeroneConfigs: currentelayeroneConfigs.configs, 
+      headers: currentelayeroneConfigs.headers 
+    };    
 
   } catch (error) {
     node.error('You Not Authenticate', msg);
@@ -490,8 +481,6 @@ function generateRequestSL(node, msg, config, options) {
       idLayerOneConfigs: idLayerOneConfigs,
     };
   }
-
-
 
 
   async function sendRequest({ node, msg, config, axios, login, options }) {

@@ -11,16 +11,10 @@ module.exports = function(RED) {
         const node = this;
 
         node.status({}); // Reset Status
+        const EXPIRED_TIME = 60; // minutes
         const globalContext = node.context().global;
-        let globalName = `${PREFIXNAME}_${node.id}`;
-        globalContext.set(globalName, {
-                id: node.id,
-                layeroneConfigs: node.layeroneConfigs,
-                type: node.entity,
-                configs: node.Configs,
-                params: []
-        });
-    
+        let globalName= "";
+
         if (!node.layeroneConfigs) {
             node.status({ fill: 'gray', shape: 'ring', text: 'Missing credentials' });
         }
@@ -30,6 +24,8 @@ module.exports = function(RED) {
             try {
                 
                 if(config.entity == "Static" || config.entity == "") {
+                    let conf = RED.nodes.getNode(node.layeroneConfigs).options;
+                    globalName = `${PREFIXNAME}_CONFIG.${conf.host.replaceAll('.', '')}_${conf.databaseName}_${conf.companyUser}`;
                     let currentDate = new Date();
                     const headers = globalContext.get(`${globalName}.headers`);
                     const exipiredTime = globalContext.get(`${globalName}.exp`);
@@ -43,7 +39,6 @@ module.exports = function(RED) {
                         id: globalName,
                     }
 
-                    let conf = RED.nodes.getNode(node.layeroneConfigs).options;
                     globalContext.set(`${globalName}.layeroneConfigs`, node.layeroneConfigs); 
                     globalContext.set(`${globalName}.configs`, conf);
 
@@ -51,7 +46,7 @@ module.exports = function(RED) {
                         let providedDate = new Date(exipiredTime);
                         let timeDifference = currentDate - providedDate;
                         let minutesDifference = timeDifference / (1000 * 60);
-                        validToken = minutesDifference > 25 ? false : true;
+                        validToken = minutesDifference > EXPIRED_TIME ? false : true;
                     }
 
 
@@ -126,7 +121,7 @@ module.exports = function(RED) {
                             let providedDate = new Date(exipiredTime);
                             let timeDifference = currentDate - providedDate;
                             let minutesDifference = timeDifference / (1000 * 60);
-                            validToken = minutesDifference > 25 ? false : true;
+                            validToken = minutesDifference > EXPIRED_TIME ? false : true;
                         }
 
                         if(!headers || !validToken) {
@@ -214,7 +209,7 @@ module.exports = function(RED) {
                             let providedDate = new Date(exipiredTime);
                             let timeDifference = currentDate - providedDate;
                             let minutesDifference = timeDifference / (1000 * 60);
-                            validToken = minutesDifference > 25 ? false : true;
+                            validToken = minutesDifference > EXPIRED_TIME ? false : true;
                         }
 
                         if(!headers || !validToken) {
