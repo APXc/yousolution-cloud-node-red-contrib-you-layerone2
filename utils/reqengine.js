@@ -233,6 +233,16 @@ async function Login(node, Configs, headers = {}) {
         "consumerIdentity": Configs.consumerIdentity,
      };
 
+     let ConfigsHeaders = Configs.headers ? Configs.headers.reduce((acc, header) => {
+        // Se keyValue è vuoto, usa keyType come chiave
+        const key = header.keyValue === "" ? header.keyType : header.keyValue;
+        const value = header.valueValue;
+        
+        acc[key] = value;
+        return acc;
+        }, {}) : {};
+
+
     const options = {
         method: 'POST',
         url: url,
@@ -240,9 +250,13 @@ async function Login(node, Configs, headers = {}) {
         data: data,
         headers: {
           'Content-Type': 'application/json',
+          // Static Headers from Configs
+          ...ConfigsHeaders,
+          // Custom form Msg
           ...headers
         },
     };
+
     return await axios(options);
 
 }
@@ -447,9 +461,18 @@ function generateRequestSL(node, msg, config, options) {
       url = `${url}${urlOdata}`;
     }
 
+    let ConfigsHeaders = currentelayeroneConfigs.headers ? currentelayeroneConfigs.headers.reduce((acc, header) => {
+        // Se keyValue è vuoto, usa keyType come chiave
+        const key = header.keyValue === "" ? header.keyType : header.keyValue;
+        const value = header.valueValue;
+        
+        acc[key] = value;
+        return acc;
+        }, {}) : {};
 
-    const headersMerge = { ...msg[config.headers], ...headers};
-  
+
+
+    const headersMerge = { ...ConfigsHeaders, ...msg[config.headers], ...headers};
     let axiosOptions = {
       method: options.method,
       url: url,

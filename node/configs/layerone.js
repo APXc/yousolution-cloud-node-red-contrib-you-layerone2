@@ -12,6 +12,7 @@ module.exports = function (RED)  {
             companyUser: n.companyUser,
             companyPassword: n.companyPassword,
             consumerIdentity: n.consumerIdentity,
+            headers: n.headers
         }
 
         const globalContext = this.context().global;
