@@ -243,9 +243,6 @@ async function Login(node, Configs, headers = {}) {
           ...headers
         },
     };
-
-    console.log(options);
-
     return await axios(options);
 
 }
