@@ -38,37 +38,87 @@
         value: 'paramsprops'
       });
       
-        jQuery("#node-input-entity").change(function() {
+        // jQuery("#node-input-entity").change(function() {
+        //   jQuery('#node-entitydynamics').hide();
+        //   jQuery('#node-configsid').hide();
+        //   jQuery('#node-params').hide();
+
+        //   if (jQuery(this).val() === 'Static'){ 
+        //       jQuery('#node-staticlogin').show();
+
+        //       jQuery('#node-entitydynamics').hide();
+        //        jQuery('#node-configsid').hide();
+        //         jQuery('#node-params').hide();
+        //   }
+        //   else if(jQuery(this).val() === 'Dynamics'){
+        //       jQuery('#node-staticlogin').hide();
+        //       jQuery('#node-entitydynamics').show();
+        //        jQuery('#node-configsid').show();
+                
+        //   }
+        // });
+
+        // jQuery("#node-input-entitydynamics").change(function() {
+        //   jQuery('#node-configsid').hide();
+        //   jQuery('#node-params').hide();
+        //   if (jQuery(this).val() === 'Configs'){ 
+        //       jQuery('#node-configsid').show();
+        //       jQuery('#node-params').hide();
+        //   }
+        //   else if(jQuery(this).val() === 'Params'){
+        //       jQuery('#node-configsid').hide();
+        //       jQuery('#node-params').show();
+        //   }
+        // });
+        // Funzione per aggiornare la visibilità dei campi
+        function updateVisibility() {
+          const entityValue = jQuery("#node-input-entity").val();
+          const entityDynamicsValue = jQuery("#node-input-entitydynamics").val();
+          
+          // Nascondi tutti i campi inizialmente
           jQuery('#node-entitydynamics').hide();
           jQuery('#node-configsid').hide();
           jQuery('#node-params').hide();
+          jQuery('#node-staticlogin').hide();
           
-          if (jQuery(this).val() === 'Static'){ 
-              jQuery('#node-staticlogin').show();
-              jQuery('#node-entitydynamics').hide();
-               jQuery('#node-configsid').hide();
-                jQuery('#node-params').hide();
+          if (entityValue === 'Static') {
+            jQuery('#node-staticlogin').show();
+          } else if (entityValue === 'Dynamics') {
+            jQuery('#node-entitydynamics').show();
+            jQuery('#node-configsid').show();
+            
+            // Gestisci la sotto-selezione
+            if (entityDynamicsValue === 'Configs') {
+              jQuery('#node-configsid').show();
+              jQuery('#node-params').hide();
+            } else if (entityDynamicsValue === 'Params') {
+              jQuery('#node-configsid').hide();
+              jQuery('#node-params').show();
+            }
           }
-          else if(jQuery(this).val() === 'Dynamics'){
-              jQuery('#node-staticlogin').hide();
-              jQuery('#node-entitydynamics').show();
-               jQuery('#node-configsid').show();
-                
-          }
+        }
+
+        // Event handlers
+        jQuery("#node-input-entity").change(function() {
+          updateVisibility();
         });
 
         jQuery("#node-input-entitydynamics").change(function() {
-          jQuery('#node-configsid').hide();
-          jQuery('#node-params').hide();
-          if (jQuery(this).val() === 'Configs'){ 
-              jQuery('#node-configsid').show();
-              jQuery('#node-params').hide();
-          }
-          else if(jQuery(this).val() === 'Params'){
-              jQuery('#node-configsid').hide();
-              jQuery('#node-params').show();
+          const entityDynamicsValue = jQuery(this).val();
+          
+          if (entityDynamicsValue === 'Configs') {
+            jQuery('#node-configsid').show();
+            jQuery('#node-params').hide();
+          } else if (entityDynamicsValue === 'Params') {
+            jQuery('#node-configsid').hide();
+            jQuery('#node-params').show();
           }
         });
+
+        // IMPORTANTE: Aggiorna la visibilità iniziale dopo che i valori sono stati caricati
+        setTimeout(function() {
+          updateVisibility();
+        }, 100);
 
       }
     });
@@ -92,7 +142,7 @@
         </select>
       </div>
 
-      <div id="node-configsid">
+      <div id="node-configsid" style="display:none">
           <div class="form-row" >
             <label for="node-input-configsid"><i class="fa fa-gears"></i>Props Configs ID</label>
             <input type="text" id="node-input-configsid">
@@ -113,7 +163,7 @@
       </div>
        
 
-        <div id="node-params">
+        <div id="node-params" style="display:none">
         <div class="form-row" id="node-paramsprops">
           <label for="node-input-paramsprops"><i class="fa fa-gears"></i> Props Params</label>
           <input type="text" id="node-input-paramsprops">
