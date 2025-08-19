@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+# [0.1.0] - 2025-08-19
+- Add Manage Dynamic Login on LayerOneConfigs and manage CustomHeader on configuration
+> *Warning Breaking Change!* please make backups of flows & Configuration and try in test environment before upgrading
+- Add Manage NextLink on ServiceNode
+> the node ServiceNode does *not manage “NextLink” directly* as it is very case-dependent, the property is provided and *delegated to the flow for management*
+- Bug fix view on PatchSAP Node
+- General Bug Fix
+- Library Axios & Odata Updated
+
 # [0.0.12] - 2025-08-06
 - add Manage UserFieldsMD on you-layerone2-sl-create / you-layerone2-sl-list / you-layerone2-sl-delete 
 > Not add Manage on you-layerone2-sl-get becose not work on corrent ServiceLayer Version
