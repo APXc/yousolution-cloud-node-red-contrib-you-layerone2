@@ -95,13 +95,23 @@ async function JsonBatch(node, msg, configs){
       }))
     };
 
+
+    let ConfigsHeaders = currentelayeroneConfigs.headers ? currentelayeroneConfigs.headers.reduce((acc, header) => {
+    // Se keyValue è vuoto, usa keyType come chiave
+    const key = header.keyValue === "" ? header.keyType : header.keyValue;
+    const value = header.valueValue;
+    
+    acc[key] = value;
+    return acc;
+    }, {}) : {};
+
     url = `${baseUrl}/$batch`;
     let axiosOptions = {
       method: "POST",
       url: url,
       rejectUnauthorized: false,
       withCredentials: true,
-      headers: {...headers, ...msg[configs.headers]},
+      headers: {...ConfigsHeaders , ...headers, ...msg[configs.headers]},
       data: data  
     };
   
@@ -118,6 +128,15 @@ async function AdoNetQuery(node, msg, configs, options){
   let rawQuery = configs.query;
   let baseUrl = buildBaseUrlPlugins(currentelayeroneConfigs,pluginName);
   let data = {};
+
+  let ConfigsHeaders = currentelayeroneConfigs.headers ? currentelayeroneConfigs.headers.reduce((acc, header) => {
+    // Se keyValue è vuoto, usa keyType come chiave
+    const key = header.keyValue === "" ? header.keyType : header.keyValue;
+    const value = header.valueValue;
+    
+    acc[key] = value;
+    return acc;
+    }, {}) : {};
 
   let globalName = `${PREFIXNAME}_${pluginName}_${node.id}`;
   if(options.setup == 'QUERY') {
@@ -160,11 +179,10 @@ async function AdoNetQuery(node, msg, configs, options){
     url: url,
     rejectUnauthorized: false,
     withCredentials: true,
-    headers: {...headers, ...msg[configs.headers]},
+    headers: {...ConfigsHeaders ,...headers, ...msg[configs.headers]},
     data: data  
   };
 
-  //axiosOptions = { ...axiosOptions,  };
   return await axios(axiosOptions);
 
 }
@@ -176,11 +194,21 @@ async function HealthCheck(node, conf ,databaseName) {
     }
     let url =  `${buildBaseUrl(conf)}/HealthCheck?databaseName=${databaseName.trim()}`;
 
+    let ConfigsHeaders = conf.headers ? conf.headers.reduce((acc, header) => {
+    // Se keyValue è vuoto, usa keyType come chiave
+    const key = header.keyValue === "" ? header.keyType : header.keyValue;
+    const value = header.valueValue;
+    
+    acc[key] = value;
+    return acc;
+    }, {}) : {};
+
     const options = {
       method: 'GET',
       url: url,
       rejectUnauthorized: false,
       headers: {
+        ...ConfigsHeaders,
         'Content-Type': 'application/json',
       },
   };
@@ -194,6 +222,15 @@ async function Plugins(node, msg, configs, options) {
   let url;
   let rawQuery = configs.query;
   let baseUrl = buildBaseUrl(currentelayeroneConfigs);
+
+  let ConfigsHeaders = currentelayeroneConfigs.headers ? currentelayeroneConfigs.headers.reduce((acc, header) => {
+    // Se keyValue è vuoto, usa keyType come chiave
+    const key = header.keyValue === "" ? header.keyType : header.keyValue;
+    const value = header.valueValue;
+    
+    acc[key] = value;
+    return acc;
+    }, {}) : {};
 
 
   if(options.setup == 'OBJECT') {
@@ -214,7 +251,10 @@ async function Plugins(node, msg, configs, options) {
       url: url,
       rejectUnauthorized: false,
       withCredentials: true,
-      headers: headers,
+      headers: {
+        ...ConfigsHeaders,
+        ...headers,
+      },
     };
   
     if (options.data) {
