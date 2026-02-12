@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+# [0.1.1] - 2026-02-12
+- - Add Manage SpecialPrices on LayerOne2SL Get / List / Create / Delete / Update
+
 # [0.1.0] - 2025-08-19
 - Add Manage Dynamic Login on LayerOneConfigs and manage CustomHeader on configuration
 > *Warning Breaking Change!* please make backups of flows & Configuration and try in test environment before upgrading

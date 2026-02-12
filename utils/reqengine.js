@@ -52,6 +52,10 @@ const thickIdApi = [
     'ReportTypes',
     'Resources',
     'SalesTaxCodes',
+    "SpecialPrices",
+    "StockTransferDrafts",
+    "StockTransfers",
+    "Substitute",
     'TargetGroups',
     'TaxInvoiceReport',
     'TransactionCodes',
@@ -411,7 +415,7 @@ function generateRequestSL(node, msg, config, options) {
   
     if (options.hasEntityId) {
       let entityId = msg[config.entityId];
-      if (!entityId && config.entity != 'UDO' && config.entity != 'UDT' && config.entity != 'AlternateCatNum') {
+      if (!entityId && config.entity != 'UDO' && config.entity != 'UDT' && config.entity != 'AlternateCatNum' && config.entity != 'SpecialPrices') {
         throw new Error('Missing entityId');
       }
       const docEntry = msg[config.docEntry];
@@ -436,6 +440,12 @@ function generateRequestSL(node, msg, config, options) {
           let CardCode = msg[config.AlternateCatNumCardCodeId];
           let Substitute = msg[config.AlternateCatNumSubstituteId]
           url = `${baseUrl}/servicelayer/${entity}(ItemCode='${ItemCode}', CardCode='${CardCode}', Substitute='${Substitute}')`;
+
+        }
+        else if(entity === 'SpecialPrices') { // Manage Special Case SpecialPrices
+          let ItemCode = msg[config.SpecialPricesItemId];
+          let CardCode = msg[config.SpecialPricesCardCodeId];
+          url = `${baseUrl}/servicelayer/${entity}(CardCode='${CardCode}', ItemCode='${ItemCode}')`;
 
         }
         else if(Number.isInteger(entityId)) {
