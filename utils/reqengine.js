@@ -289,6 +289,7 @@ async function Login(node, Configs, headers = {}) {
 
     const options = {
         method: 'POST',
+        timeout: Configs.timeOut || 120000,
         url: url,
         rejectUnauthorized: false,
         data: data,
@@ -516,6 +517,7 @@ function generateRequestSL(node, msg, config, options) {
     const headersMerge = { ...ConfigsHeaders, ...msg[config.headers], ...headers};
     let axiosOptions = {
       method: options.method,
+      timeout: config.timeOut || 120000,
       url: url,
       rejectUnauthorized: false,
       withCredentials: true,

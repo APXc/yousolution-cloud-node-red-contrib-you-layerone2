@@ -39,6 +39,10 @@
         <label for="node-config-input-consumerIdentity"><i class="fa fa-tag"></i> Identity</label>
         <input type="text" id="node-config-input-consumerIdentity" />
       </div>
+      <div class="form-row">
+        <label for="node-config-input-timeOut"><i class="fa fa-clock"></i> Timeout (ms)</label>
+        <input type="text" id="node-config-input-timeOut" />
+      </div>
       <div>
          <div class="form-row" style="margin-bottom:0;">
         <label><i class="fa fa-list"></i> <span>Headers</span></label>
@@ -148,6 +152,7 @@
         port: { value: '' , validate:RED.validators.number()},
         version: { value: 'v1' },
         databaseName: { value: '', required: true },
+        timeOut: { value: "120000", validate: RED.validators.number() },
         companyUser: { value: '',  required: true },
         companyPassword: { value: '',  required: true },
         consumerIdentity: { value: 'NTH',  required: true },
@@ -158,6 +163,12 @@
       },
       oneditprepare: function() {
        const node = this;
+
+        if(!node.timeOut){
+            node.timeOut = "120000";
+           $("#node-input-timeOut").val(this.timeOut);
+        }
+
       const hasMatch = function (arr, value) {
             return arr.some(function (ht) {
                 return ht.value === value

@@ -12,7 +12,12 @@ module.exports = function (RED)  {
             companyUser: n.companyUser,
             companyPassword: n.companyPassword,
             consumerIdentity: n.consumerIdentity,
+            timeOut: n.timeOut,
             headers: n.headers
+        }
+
+        if(this.options.timeOut === undefined || this.options.timeOut === null || this.options.timeOut === ""){
+            this.options.timeOut = 120000;
         }
 
         const globalContext = this.context().global;
